@@ -1,10 +1,10 @@
 <?php
 namespace ZfTable\Source;
 
-use ZfTable\Source\AbstractSource;
-use Zend\Paginator\Paginator;
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
+use Zend\Paginator\Paginator;
+use ZfTable\Source\AbstractSource;
 
 class DoctrineQueryBuilder extends AbstractSource
 {
@@ -38,18 +38,18 @@ class DoctrineQueryBuilder extends AbstractSource
     {
         if (!$this->paginator) {
 
-
             $this->order();
 
-             $adapter = new DoctrineAdapter(new ORMPaginator($this->query));
-             $this->paginator = new Paginator($adapter);
-             $this->initPaginator();
+            $doctrinePaginator = new ORMPaginator($this->query);
+            $doctrinePaginator->setUseOutputWalkers(false);
+
+            $adapter = new DoctrineAdapter($doctrinePaginator);
+            $this->paginator = new Paginator($adapter);
+            $this->initPaginator();
 
         }
         return $this->paginator;
     }
-
-
 
     protected function order()
     {
@@ -64,12 +64,11 @@ class DoctrineQueryBuilder extends AbstractSource
         $tableAlias = ($header) ? $header->getTableAlias() : 'q';
 
         if (false === strpos($tableAlias, '.')) {
-            $tableAlias = $tableAlias.'.'.$column;
+            $tableAlias = $tableAlias . '.' . $column;
         }
 
         $this->query->orderBy($tableAlias, $order);
     }
-
 
     public function getQuery()
     {
