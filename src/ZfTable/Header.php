@@ -35,6 +35,12 @@ class Header extends AbstractElement
      */
     protected $width;
 
+    /**
+     * Style of the column
+     *
+     * @var int
+     */
+    protected $style;
 
     /**
      * Name of table alias for defined column
@@ -126,6 +132,7 @@ class Header extends AbstractElement
     {
         $this->title = (isset($options['title'])) ? $options['title'] : '';
         $this->width = (isset($options['width'])) ? $options['width'] : '';
+        $this->style = (isset($options['style'])) ? $options['style'] : '';
         $this->order = (isset($options['order'])) ? $options['order'] : true;
         $this->sortable = (isset($options['sortable'])) ? $options['sortable'] : true;
         $this->separatable = (isset($options['separatable'])) ? $options['separatable'] : $this->getSeparatable();
@@ -158,6 +165,22 @@ class Header extends AbstractElement
     public function setWidth($width)
     {
         $this->width = $width;
+    }
+
+    /**
+     * @return int
+     */
+    public function getStyle()
+    {
+        return $this->style;
+    }
+
+    /**
+     * @param int $style
+     */
+    public function setStyle($style)
+    {
+        $this->style = $style;
     }
 
     /**
@@ -333,9 +356,12 @@ class Header extends AbstractElement
             $this->addAttr('data-column', $this->getName());
         }
 
-
         if ($this->width) {
             $this->addAttr('width', $this->width);
+        }
+
+        if ($this->style) {
+            $this->addAttr('style', $this->style);
         }
     }
 
